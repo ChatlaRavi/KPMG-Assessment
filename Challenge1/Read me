@@ -1,1 +1,3 @@
-
+# We can approach for creating the 3 tier environment in multiple ways
+   #1. creating the reources directly into the Azure portal Manually
+In this to automate the resources I used terraform to create the resources.
