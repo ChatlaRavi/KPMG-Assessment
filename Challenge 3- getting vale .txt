@@ -1,0 +1,48 @@
+# We have a nested object. We would like a function where you pass in the object and a key and
+get back the value.
+#Writing a powershell script inorder to get the value
+
+function Get-ValueFromNestedObject {
+    param(
+        [Parameter(Mandatory=$true)]
+        [Hashtable]$nestedObject,
+
+        [Parameter(Mandatory=$true)]
+        [string]$key
+    )
+
+    $keys = $key -split '/'
+    $currentObject = $nestedObject
+
+    foreach ($k in $keys) {
+        if ($currentObject.ContainsKey($k)) {
+            $currentObject = $currentObject[$k]
+        }
+        else {
+            return $null
+        }
+    }
+
+    return $currentObject
+}
+
+# Example Inputs
+$object1 = @{
+    "a" = @{
+        "b" = @{
+            "c" = "d"
+        }
+    }
+}
+$key1 = "a/b/c"
+Write-Output (Get-ValueFromNestedObject -nestedObject $object1 -key $key1)  # Output: "d"
+
+$object2 = @{
+    "x" = @{
+        "y" = @{
+            "z" = "a"
+        }
+    }
+}
+$key2 = "x/y/z"
+Write-Output (Get-ValueFromNestedObject -nestedObject $object2 -key $key2)  # Output: "a"

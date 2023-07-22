@@ -1,0 +1,36 @@
+
+
+#Step 1 Connect to azure portal, Use powershell command Connect-Azaccount.
+#Step 2 Set the Azure Subscription "Set-AzureSubscription"
+
+# Below is the terraform code and save the file as "main.tf" 
+
+provider "azurerm" {
+  features {}
+}
+
+data "azurerm_virtual_machine" "instance" {
+  name                = "VM Name"        # Mention the VM name
+  resource_group_name = "Resourcegroup-name" # Mention the resource group name where the VM is underlying
+}
+
+output "instance_metadata_json" {
+  value = jsonencode({
+    instance_id        = data.azurerm_virtual_machine.instance.id
+    vm_name            = data.azurerm_virtual_machine.instance.name
+    vm_size            = data.azurerm_virtual_machine.instance.vm_size
+    public_ip_address  = data.azurerm_virtual_machine.instance.public_ip_address
+    private_ip_address = data.azurerm_virtual_machine.instance.private_ip_address
+    os_type            = data.azurerm_virtual_machine.instance.storage_os_disk[0].os_type
+    location           = data.azurerm_virtual_machine.instance.location
+    tags               = data.azurerm_virtual_machine.instance.tags
+    # Add more metadata attributes as needed
+  })
+}
+#Terraform Commands to Implement:
+
+#terraform init: This command is used to initialize the working directory and download the necessary provider plugins. Run this command once per Terraform configuration (in the same directory as main.tf).
+
+#terraform plan: This command creates an execution plan that shows what actions Terraform will take to create, modify, or delete resources. Run this command to review the planned actions before applying any changes to your infrastructure.
+
+#terraform apply: This command is used to apply the changes and create or modify resources as defined in the Terraform configuration. It will prompt you to confirm the changes before applying them. After applying, the JSON-formatted metadata will be displayed as the output.
